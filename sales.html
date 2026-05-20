@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StruclyProp — Institutional-Grade Property Investment Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:      #0a0f1e;
+  --bg2:     #0c1428;
+  --bg3:     #0f1932;
+  --bg4:     #121e38;
+  --border:  #1e2d54;
+  --border2: #253360;
+  --gold:    #f0c040;
+  --gold2:   #e0b030;
+  --gold3:   #c89020;
+  --golddim: #1a2860;
+  --goldbg:  #0f1e50;
+  --green:   #00d68f;
+  --red:     #ff4d6d;
+  --amber:   #ff9f43;
+  --text:    #f0f4ff;
+  --text2:   #b8c4e0;
+  --text3:   #7a9ac0;
+  --text4:   #4a6a9a;
+  --text5:   #2a3a5a;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(240,192,64,0)}50%{box-shadow:0 0 32px 8px rgba(240,192,64,.2)}}
+@keyframes btnpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.022)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+.container{max-width:920px;margin:0 auto;padding:0 28px}
+.container-wide{max-width:1100px;margin:0 auto;padding:0 28px}
+section{padding:96px 0}
+
+/* ── NAV ─────────────────────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:100;background:rgba(7,7,10,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;padding:14px 28px;gap:12px;flex-wrap:wrap}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-wordmark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);letter-spacing:.02em;line-height:1}
+.nav-tag{font-family:var(--mono);font-size:8px;color:var(--text5);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+.nav-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav-price{font-family:var(--mono);font-size:11px;color:var(--text4);letter-spacing:.06em}
+.nav-cta{background:var(--gold);color:var(--bg);font-family:var(--mono);font-size:11px;font-weight:700;padding:9px 22px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;display:inline-block;border:none}
+.nav-cta:hover{background:#e8d870;box-shadow:0 0 24px rgba(212,197,90,.3)}
+
+/* ── TICKER ──────────────────────────────────────────────────── */
+.ticker-wrap{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 0;overflow:hidden}
+.ticker-inner{display:flex;white-space:nowrap;animation:ticker 40s linear infinite}
+.ticker-item{font-family:var(--mono);font-size:9px;color:var(--text4);letter-spacing:.12em;text-transform:uppercase;padding:0 32px;display:flex;align-items:center;gap:10px}
+.ticker-item::after{content:'◆';color:var(--golddim);font-size:6px}
+
+/* ── HERO ─────────────────────────────────────────────────────── */
+.hero{padding:90px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(212,197,90,.04) 0%,transparent 70%)}
+.hero::after{content:'PRO';position:absolute;right:-40px;top:-20px;font-family:'Cormorant Garamond',serif;font-size:320px;font-weight:900;color:rgba(212,197,90,.025);line-height:1;pointer-events:none;letter-spacing:-.04em;z-index:0}
+.hero-inner{position:relative;z-index:1}
+.hero-kicker{font-family:var(--mono);font-size:9px;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.hero-kicker::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold2)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,7vw,80px);font-weight:900;line-height:1.03;letter-spacing:-.025em;color:var(--text);margin-bottom:10px}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero-sub{font-size:19px;color:var(--text2);max-width:580px;margin:20px 0 0;line-height:1.68;font-weight:300}
+.hero-sub strong{color:var(--text);font-weight:500}
+
+/* Hero two-col layout */
+.hero-cols{display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;margin-top:48px}
+.hero-left{}
+.hero-right{}
+
+/* Terminal output mock */
+.terminal{background:var(--bg3);border:1px solid var(--border2);border-top:2px solid var(--gold);font-family:var(--mono)}
+.terminal-bar{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.terminal-title{font-size:9px;color:var(--text4);letter-spacing:.12em;text-transform:uppercase}
+.terminal-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s ease infinite}
+.terminal-row{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border);font-size:12px}
+.terminal-row:last-child{border-bottom:none}
+.terminal-lbl{color:var(--text3);font-weight:300}
+.terminal-val{font-weight:500;font-size:13px}
+.tv-green{color:var(--green)}
+.tv-red{color:var(--red)}
+.tv-gold{color:var(--gold)}
+.tv-badge{background:var(--goldbg);color:var(--gold);border:1px solid var(--golddim);padding:3px 10px;font-size:10px;letter-spacing:.1em}
+
+/* Price badge */
+.price-block{margin-top:36px;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.price-badge{background:var(--bg3);border:1px solid var(--border2);border-top:2px solid var(--gold);padding:20px 28px;animation:glow 3s ease infinite}
+.price-label{font-family:var(--mono);font-size:8px;color:var(--text4);letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:58px;font-weight:900;color:var(--gold);line-height:1;letter-spacing:-.02em}
+.price-sub{font-size:11px;color:var(--text3);margin-top:5px;font-family:var(--mono);letter-spacing:.04em}
+.price-detail{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.price-detail-item{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.06em}
+.price-detail-item::before{content:'✓';color:var(--green);font-size:10px}
+
+/* Proof bar */
+.proof-bar{display:flex;align-items:center;gap:36px;flex-wrap:wrap;margin-top:40px;padding-top:28px;border-top:1px solid var(--border)}
+.proof-item{}
+.proof-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1}
+.proof-num .ac{color:var(--gold)}
+.proof-lbl{font-family:var(--mono);font-size:8px;color:var(--text4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.proof-div{width:1px;height:36px;background:var(--border)}
+
+/* ── SHARED ───────────────────────────────────────────────────── */
+.eyebrow{font-family:var(--mono);font-size:9px;color:var(--gold2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';display:inline-block;width:18px;height:1px;background:var(--gold2)}
+.section-h{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4.5vw,50px);font-weight:900;line-height:1.06;color:var(--text);margin-bottom:14px;letter-spacing:-.015em}
+.section-h em{color:var(--gold);font-style:italic}
+.section-intro{font-size:17px;color:var(--text2);max-width:640px;line-height:1.72;font-weight:300}
+.section-intro strong{color:var(--text);font-weight:500}
+.rule{height:1px;background:var(--border)}
+.rule.gold{background:var(--golddim)}
+
+/* ── ROI NUMBERS SECTION ──────────────────────────────────────── */
+.roi-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;border:1px solid var(--border)}
+.roi-item{padding:40px 32px;border-right:1px solid var(--border);position:relative}
+.roi-item:last-child{border-right:none}
+.roi-item::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(to right,var(--gold2),transparent)}
+.roi-number{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:900;color:var(--gold);line-height:1;letter-spacing:-.02em;margin-bottom:10px}
+.roi-number sup{font-size:28px;vertical-align:super}
+.roi-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.2}
+.roi-body{font-size:13px;color:var(--text3);line-height:1.7;font-weight:300}
+.roi-body strong{color:var(--text2);font-weight:500}
+
+/* ── PAIN ─────────────────────────────────────────────────────── */
+.pain-section{background:var(--bg)}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:52px;border:1px solid var(--border)}
+.pain-item{padding:36px 28px;border-right:1px solid var(--border);position:relative}
+.pain-item:last-child{border-right:none}
+.pain-item::after{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:var(--red);opacity:.6}
+.pain-num{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:900;color:rgba(216,85,85,.08);line-height:1;display:block;margin-bottom:12px}
+.pain-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.25}
+.pain-body{font-size:13px;color:var(--text3);line-height:1.7;font-weight:300}
+
+/* ── FEATURES ─────────────────────────────────────────────────── */
+.features-section{background:var(--bg2);border-top:1px solid var(--border)}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;margin-top:52px;border:1px solid var(--border)}
+.feat{padding:36px 32px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
+.feat:nth-child(even){border-right:none}
+.feat:nth-last-child(-n+2){border-bottom:none}
+.feat.full{grid-column:1/-1;border-right:none;border-bottom:none;background:var(--bg3);border-top:1px solid var(--border2)}
+.feat.highlight-feat{background:linear-gradient(135deg,#0c0c00,#0e0e06)}
+.feat-num{font-family:var(--mono);font-size:8px;color:var(--gold2);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;display:block}
+.feat-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.15}
+.feat-body{font-size:13px;color:var(--text3);line-height:1.7;font-weight:300}
+.feat-body strong{color:var(--text2);font-weight:500}
+.feat-roi{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--goldbg);border:1px solid var(--golddim);padding:6px 12px}
+.feat-roi-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--gold)}
+.feat-roi-lbl{font-family:var(--mono);font-size:9px;color:var(--gold3);letter-spacing:.08em}
+.feat-tag{display:inline-block;margin-top:14px;background:var(--bg);border:1px solid var(--border);font-family:var(--mono);font-size:8px;color:var(--text4);padding:3px 10px;letter-spacing:.1em;text-transform:uppercase}
+.feat.full .feat-tag{background:var(--goldbg);border-color:var(--golddim);color:var(--gold2)}
+.feat.full .feat-num{color:var(--gold2)}
+
+/* ── WHO ──────────────────────────────────────────────────────── */
+.who-section{background:var(--bg)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.who-card{background:var(--bg3);border:1px solid var(--border);padding:28px 22px;position:relative;overflow:hidden}
+.who-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(to right,var(--gold2),transparent)}
+.who-flag{font-size:24px;margin-bottom:10px;display:block}
+.who-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--text);margin-bottom:10px}
+.who-body{font-size:13px;color:var(--text3);line-height:1.65;font-weight:300}
+.who-body strong{color:var(--text2);font-weight:500}
+.who-tag{display:block;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:var(--mono);font-size:8px;color:var(--gold3);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── OBJECTIONS ───────────────────────────────────────────────── */
+.obj-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.obj-list{margin-top:52px}
+.obj-item{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);padding:40px 0}
+.obj-item:last-child{border-bottom:1px solid var(--border)}
+.obj-q{padding-right:48px}
+.obj-label{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.obj-label::before{content:'';display:inline-block;width:14px;height:1px}
+.obj-label.q{color:var(--red)}.obj-label.q::before{background:var(--red)}
+.obj-label.a{color:var(--green)}.obj-label.a::before{background:var(--green)}
+.obj-question{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;font-weight:400;color:var(--text2);line-height:1.4}
+.obj-answer{font-size:14px;color:var(--text3);line-height:1.78;font-weight:300;border-left:1px solid var(--border);padding-left:48px}
+.obj-answer strong{color:var(--text2);font-weight:500}
+
+/* ── INCLUDED ─────────────────────────────────────────────────── */
+.included-section{background:var(--bg);border-top:1px solid var(--border)}
+.included-cols{display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-top:48px;align-items:start}
+.included-list{list-style:none}
+.included-list li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2);font-weight:300;line-height:1.5}
+.included-list li:last-child{border-bottom:none}
+.included-list li::before{content:'✓';color:var(--green);font-size:11px;flex-shrink:0;margin-top:3px;font-weight:700}
+.included-list li strong{color:var(--text);font-weight:500}
+.included-list li .new-badge{font-family:var(--mono);font-size:7px;color:var(--gold2);background:var(--goldbg);border:1px solid var(--golddim);padding:1px 5px;letter-spacing:.1em;margin-left:6px;vertical-align:middle;flex-shrink:0}
+.gbox{background:var(--bg3);border:1px solid var(--border2);border-top:2px solid var(--gold)}
+.gbox-hdr{padding:13px 22px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;color:var(--text4);letter-spacing:.12em;text-transform:uppercase}
+.gbox-body{padding:22px}
+.gbox-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:10px}
+.gbox-text{font-size:13px;color:var(--text3);line-height:1.7;font-weight:300}
+.gbox-text strong{color:var(--text2);font-weight:500}
+.delivery{background:var(--bg4);border:1px solid var(--border);border-top:none;padding:14px 22px;font-family:var(--mono);font-size:9px;color:var(--text4);letter-spacing:.06em;line-height:1.9}
+
+/* ── CTA ──────────────────────────────────────────────────────── */
+.cta-section{background:var(--bg2);padding:100px 0;text-align:center;position:relative;overflow:hidden;border-top:1px solid var(--border)}
+.cta-section::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:52px 52px;opacity:.28;pointer-events:none}
+.cta-section::after{content:'$450';position:absolute;font-family:'Cormorant Garamond',serif;font-size:300px;font-weight:900;color:rgba(212,197,90,.025);top:-40px;left:50%;transform:translateX(-50%);line-height:1;pointer-events:none;white-space:nowrap;z-index:0}
+.cta-inner{position:relative;z-index:1}
+.cta-eyebrow{font-family:var(--mono);font-size:9px;color:var(--text5);letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}
+.cta-h{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5.5vw,62px);font-weight:900;line-height:1.06;color:var(--text);margin-bottom:20px;letter-spacing:-.02em}
+.cta-h em{color:var(--gold);font-style:italic}
+.cta-sub{font-size:17px;color:var(--text2);max-width:540px;margin:0 auto 44px;line-height:1.68;font-weight:300}
+.cta-price-row{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:36px;flex-wrap:wrap}
+.cta-price{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:900;color:var(--gold);line-height:1;letter-spacing:-.03em}
+.cta-price-detail{text-align:left;font-family:var(--mono);font-size:10px;color:var(--text4);line-height:2;letter-spacing:.07em}
+.cta-btn{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:700;padding:20px 56px;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s;animation:btnpulse 2.8s ease infinite}
+.cta-btn:hover{background:#e8d870;animation:none;box-shadow:0 0 40px rgba(212,197,90,.35)}
+.cta-fn{font-family:var(--mono);font-size:9px;color:var(--text5);margin-top:20px;letter-spacing:.08em}
+.cta-api{display:inline-block;margin-top:16px;background:var(--bg3);border:1px solid var(--border);padding:10px 22px;font-family:var(--mono);font-size:9px;color:var(--text4);letter-spacing:.07em;line-height:1.8}
+.cta-api a{color:var(--gold3);text-decoration:underline}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:22px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);font-weight:700}
+.ft-copy{font-family:var(--mono);font-size:8px;color:var(--text5);letter-spacing:.08em}
+.ft-links{display:flex;gap:20px;font-family:var(--mono);font-size:8px;color:var(--text5);letter-spacing:.1em}
+.ft-links a:hover{color:var(--text3)}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media(max-width:900px){
+  .hero-cols{grid-template-columns:1fr;gap:40px}
+  .hero-right{order:-1}
+}
+@media(max-width:768px){
+  section{padding:60px 0}
+  nav{padding:12px 16px}
+  .nav-tag,.nav-price{display:none}
+  .hero{padding:60px 0 52px}
+  .hero::after{font-size:120px;right:-10px}
+  .proof-div{display:none}
+  .roi-grid,.pain-grid{grid-template-columns:1fr}
+  .roi-item{border-right:none;border-bottom:1px solid var(--border)}
+  .roi-item:last-child{border-bottom:none}
+  .pain-item{border-right:none;border-bottom:1px solid var(--border)}
+  .pain-item:last-child{border-bottom:none}
+  .feat-grid{grid-template-columns:1fr}
+  .feat{border-right:none}
+  .feat.full{grid-column:1}
+  .who-grid{grid-template-columns:1fr}
+  .obj-item{grid-template-columns:1fr;gap:22px}
+  .obj-q{padding-right:0}
+  .obj-answer{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:22px}
+  .included-cols{grid-template-columns:1fr}
+  .cta-section::after{font-size:120px}
+  .cta-price{font-size:54px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="7" fill="#161400" stroke="#2e2800" stroke-width="1"/>
+      <path d="M20 7 L34 19 L30 19 L30 33 L10 33 L10 19 L6 19 Z" fill="none" stroke="#f0c040" stroke-width="1.5" stroke-linejoin="round"/>
+      <rect x="13" y="27" width="3" height="4" rx=".5" fill="#00d68f"/>
+      <rect x="18.5" y="23" width="3" height="8" rx=".5" fill="#00d68f"/>
+      <rect x="24" y="19" width="3" height="12" rx=".5" fill="#f0c040"/>
+      <rect x="17" y="26" width="6" height="7" rx=".5" fill="#161400"/>
+    </svg>
+    <div>
+      <div style="display:flex;align-items:center">
+        <span class="nav-wordmark">StruclyProp</span>
+      </div>
+      <div class="nav-tag">Institutional-Grade Property Analysis</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-price">One-time · $450 · Lifetime access</span>
+    <a href="https://strucly.lemonsqueezy.com/checkout/buy/63f01aa3-20e7-47de-946b-e2cef0d413ca" class="nav-cta" target="_blank" rel="noopener">Get StruclyProp</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">IRR Analysis</span>
+    <span class="ticker-item">NPV at Hurdle Rate</span>
+    <span class="ticker-item">Section 13sex Depreciation</span>
+    <span class="ticker-item">CGT by Ownership Structure</span>
+    <span class="ticker-item">Sensitivity Matrix</span>
+    <span class="ticker-item">Interest Rate Stress Test</span>
+    <span class="ticker-item">Exit Realisation Modelling</span>
+    <span class="ticker-item">Equity Multiple</span>
+    <span class="ticker-item">Break-Even Vacancy</span>
+    <span class="ticker-item">DSCR Analysis</span>
+    <span class="ticker-item">After-Tax Cash Flow</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item">IRR Analysis</span>
+    <span class="ticker-item">NPV at Hurdle Rate</span>
+    <span class="ticker-item">Section 13sex Depreciation</span>
+    <span class="ticker-item">CGT by Ownership Structure</span>
+    <span class="ticker-item">Sensitivity Matrix</span>
+    <span class="ticker-item">Interest Rate Stress Test</span>
+    <span class="ticker-item">Exit Realisation Modelling</span>
+    <span class="ticker-item">Equity Multiple</span>
+    <span class="ticker-item">Break-Even Vacancy</span>
+    <span class="ticker-item">DSCR Analysis</span>
+    <span class="ticker-item">After-Tax Cash Flow</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner reveal">
+      <div class="rule gold" style="margin-bottom:28px"></div>
+      <div class="hero-kicker">Institutional-Grade · For the Serious Property Investor</div>
+      <h1>The deal analysis<br/>serious investors use<br/>before they <em>sign.</em></h1>
+      <p class="hero-sub">StruclyProp runs the <strong>complete institutional property model</strong> — IRR, NPV, CGT by ownership structure, Section 13sex depreciation, sensitivity matrix, and stress testing — then delivers an AI analyst verdict. In your browser. In 90 seconds.</p>
+
+      <div class="hero-cols">
+        <div class="hero-left">
+          <div class="price-block">
+            <div class="price-badge">
+              <div class="price-label">One-time investment</div>
+              <div class="price-amount">$450</div>
+              <div class="price-sub">Lifetime access · No subscription</div>
+            </div>
+            <div class="price-detail">
+              <div class="price-detail-item">Unlimited deal analyses</div>
+              <div class="price-detail-item">Works in any browser</div>
+              <div class="price-detail-item">No account required</div>
+              <div class="price-detail-item">30-day money-back guarantee</div>
+              <div class="price-detail-item">AI analyst verdict included</div>
+            </div>
+          </div>
+
+          <div class="proof-bar">
+            <div class="proof-item"><div class="proof-num">30<span class="ac">+</span></div><div class="proof-lbl">Calculations per deal</div></div>
+            <div class="proof-div"></div>
+            <div class="proof-item"><div class="proof-num">90<span class="ac">s</span></div><div class="proof-lbl">To full IRR output</div></div>
+            <div class="proof-div"></div>
+            <div class="proof-item"><div class="proof-num">7</div><div class="proof-lbl">New modules</div></div>
+            <div class="proof-div"></div>
+            <div class="proof-item"><div class="proof-num">∞</div><div class="proof-lbl">Deals analysed</div></div>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="terminal-title">StruclyProp · Live Output</span>
+              <span class="terminal-dot"></span>
+            </div>
+            <div class="terminal-row"><span class="terminal-lbl">Net Yield</span><span class="terminal-val tv-green">6.42%</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">IRR (After-Tax, 10yr)</span><span class="terminal-val tv-green">14.8%</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">NPV at 12% Hurdle</span><span class="terminal-val tv-green">+ R 284,000</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Equity Multiple</span><span class="terminal-val tv-green">2.14×</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Monthly Cash Flow</span><span class="terminal-val tv-red">− R 1,840</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Break-Even Vacancy</span><span class="terminal-val tv-green">19.2%</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">DSCR</span><span class="terminal-val tv-red">0.91×</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Stressed CF (+200bps)</span><span class="terminal-val tv-red">− R 3,210</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Section 13sex Saving</span><span class="terminal-val tv-green">+ R 52,500/yr</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">Best CGT Structure</span><span class="terminal-val" style="color:var(--amber)">Company</span></div>
+            <div class="terminal-row"><span class="terminal-lbl">AI Analyst Verdict</span><span class="terminal-val tv-badge">HOLD</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="rule gold" style="margin-top:48px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI NUMBERS -->
+<section class="roi-section">
+  <div class="container reveal">
+    <div class="eyebrow">The Numbers That Justify the Price</div>
+    <h2 class="section-h">Three calculations in StruclyProp that<br/>each pay for it <em>on one deal.</em></h2>
+  </div>
+  <div class="container-wide reveal" style="margin-top:0">
+    <div class="roi-grid">
+      <div class="roi-item">
+        <div class="roi-number">133<sup>×</sup></div>
+        <div class="roi-title">Section 13sex ROI</div>
+        <p class="roi-body">A 5-unit portfolio on a R7M total value generates roughly <strong>R100,000+ in annual tax deductions</strong> at a 41% marginal rate. StruclyProp shows you this in one screen. One year of that saving = 133 times the cost of this tool. Most portfolio investors don't even know this allowance exists.</p>
+      </div>
+      <div class="roi-item">
+        <div class="roi-number">R160<span style="font-size:28px">k</span></div>
+        <div class="roi-title">CGT Structure Saving</div>
+        <p class="roi-body">Holding a property in the wrong ownership structure costs you on the way out. On a <strong>R2M capital gain</strong>, choosing a company over an individual structure saves roughly R160,000 in CGT. StruclyProp's structure comparison table shows all three options — Individual, Trust, Company — side by side before you make that decision.</p>
+      </div>
+      <div class="roi-item">
+        <div class="roi-number">1</div>
+        <div class="roi-title">Avoided Bad Deal</div>
+        <p class="roi-body">The IRR and NPV outputs tell you whether a deal actually clears your minimum return hurdle — not just whether the yield looks acceptable. <strong>One bad acquisition at R1.5M costs you R50,000–R200,000</strong> in transaction costs, holding costs, and opportunity cost. StruclyProp tells you to walk away before you sign, not after.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain-section">
+  <div class="container reveal">
+    <div class="eyebrow">The Gap in Every Other Tool</div>
+    <h2 class="section-h">What you're working without<br/>every time you analyse a deal.</h2>
+    <p class="section-intro">Every other property calculator on the market shows you yield and cash flow. That's the starting point, not the analysis. Serious investors need the full picture.</p>
+  </div>
+  <div class="container-wide reveal" style="margin-top:0">
+    <div class="pain-grid">
+      <div class="pain-item">
+        <span class="pain-num">01</span>
+        <div class="pain-title">You're looking at yield. You should be looking at IRR.</div>
+        <p class="pain-body">Gross yield is what estate agents quote. IRR is what institutional investors actually decide on. A 7% gross yield deal might have a 9% IRR — below your hurdle rate — once you factor in transaction costs, tax drag, vacancy, capital growth, and exit proceeds. Without IRR you're comparing apples to guesses.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">02</span>
+        <div class="pain-title">You're ignoring the CGT you'll pay on the way out.</div>
+        <p class="pain-body">Every property analysis that doesn't model exit is incomplete. What structure do you hold it in? What does CGT actually cost at sale — after your agent's commission and bond settlement? What do you actually walk away with? These questions change the deal. Most investors answer them after they've already committed.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">03</span>
+        <div class="pain-title">You're not stress-testing anything.</div>
+        <p class="pain-body">What happens to your cash flow if rates go up 200 basis points? What if vacancy is 3% higher than you assumed? What if both happen simultaneously? A deal that looks fine on base assumptions can become a serious cash drain under realistic stress. If you can't see the matrix, you don't know your exposure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="container reveal">
+    <div class="eyebrow">StruclyProp · What's Inside</div>
+    <h2 class="section-h">Eight modules. Every number<br/>a serious investor needs.</h2>
+  </div>
+  <div class="container reveal">
+    <div class="feat-grid">
+
+      <div class="feat highlight-feat">
+        <span class="feat-num">Module 01</span>
+        <h3 class="feat-title">IRR & NPV Calculator</h3>
+        <p class="feat-body">After-tax Internal Rate of Return over your chosen hold period — full Newton-Raphson calculation including every annual cash flow and net exit proceeds. NPV discounted at your hurdle rate tells you whether the deal creates value above your minimum acceptable return. <strong>If IRR exceeds hurdle rate, the deal clears your bar. If NPV is negative, it doesn't — regardless of what the yield looks like.</strong></p>
+        <div class="feat-roi"><span class="feat-roi-num">14.8%</span><span class="feat-roi-lbl">IRR on sample deal — above 12% hurdle</span></div>
+        <span class="feat-tag">After-Tax · Full Exit Modelling · Newton-Raphson Precision</span>
+      </div>
+
+      <div class="feat highlight-feat">
+        <span class="feat-num">Module 02</span>
+        <h3 class="feat-title">CGT by Ownership Structure</h3>
+        <p class="feat-body">Side-by-side comparison of CGT payable — and net gain after tax — across Individual (40% inclusion), Trust (80%), and Company (80% at corporate rate). <strong>The best structure is highlighted automatically.</strong> Run this before you decide how to hold the property. The difference on a R2M gain can exceed the cost of this tool by 200×.</p>
+        <div class="feat-roi"><span class="feat-roi-num">R160k</span><span class="feat-roi-lbl">Potential CGT saving on a R2M gain</span></div>
+        <span class="feat-tag">Individual · Trust · Company · Auto Best Pick</span>
+      </div>
+
+      <div class="feat">
+        <span class="feat-num">Module 03</span>
+        <h3 class="feat-title">Section 13sex Depreciation</h3>
+        <p class="feat-body">Automatically checks whether your portfolio qualifies for the Section 13sex allowance — 5% annual depreciation on the cost of residential rental buildings for owners of 5+ units. Calculates your annual deduction, annual tax saving at your marginal rate, and flags when you're one unit away from qualifying. <strong>Most portfolio investors are leaving this money on the table.</strong></p>
+        <span class="feat-tag">5+ Unit Threshold · Annual Tax Saving · Marginal Rate Applied</span>
+      </div>
+
+      <div class="feat">
+        <span class="feat-num">Module 04</span>
+        <h3 class="feat-title">Sensitivity Matrix</h3>
+        <p class="feat-body">A 3×3 colour-coded grid showing monthly cash flow across nine scenarios — combining ±3% vacancy with ±2% interest rate movements. Deep green to deep red. <strong>See at a glance which combinations of vacancy and rate leave you comfortable, which leave you exposed, and where the deal breaks.</strong> This is the analysis your bank's credit committee runs.</p>
+        <span class="feat-tag">9-Scenario Grid · Colour-Coded · Vacancy × Interest Rate</span>
+      </div>
+
+      <div class="feat">
+        <span class="feat-num">Module 05</span>
+        <h3 class="feat-title">Interest Rate Stress Test</h3>
+        <p class="feat-body">Model the deal at Prime + any number of basis points above your current rate. See exactly how monthly repayment and cash flow change under a rate hike scenario. <strong>Default is +200bps — the kind of move the SARB has made in a single cycle before.</strong> If the deal survives the stress test, you can hold through a rate cycle without being forced to sell.</p>
+        <span class="feat-tag">Basis Point Input · Stressed Repayment · Stressed Cash Flow</span>
+      </div>
+
+      <div class="feat">
+        <span class="feat-num">Module 06</span>
+        <h3 class="feat-title">Exit & Realisation Modelling</h3>
+        <p class="feat-body">Projected exit price using NOI capitalised at your assumed exit cap rate — the way investment-grade property is actually valued, not just comparable sales. Net proceeds after agent commission, bond settlement, and CGT. Equity multiple. Payback period. <strong>Model the exit before you buy the entry.</strong></p>
+        <span class="feat-tag">Cap Rate Valuation · Net Proceeds · Equity Multiple · Payback</span>
+      </div>
+
+      <div class="feat">
+        <span class="feat-num">Module 07 · Core</span>
+        <h3 class="feat-title">Complete Cash Flow & Yield Model</h3>
+        <p class="feat-body">The full buy-to-let financial model: annuity bond repayment, SARS 2024/25 transfer duty on the sliding scale, gross and net yield, after-tax cash flow with monthly SARS tax shield, break-even vacancy, DSCR, LTV, price-to-rent ratio, NOI, and a 5-year capital growth table with equity and ROE. All updating live as you type.</p>
+        <span class="feat-tag">30+ Live Calculations · Real-Time · SARS-Accurate</span>
+      </div>
+
+      <div class="feat full">
+        <span class="feat-num">Module 08 · The Differentiator</span>
+        <h3 class="feat-title">AI Analyst Verdict — Full Metrics</h3>
+        <p class="feat-body">Every analysis ends with a four-paragraph AI deal memo written like a senior structured-finance analyst. The AI has access to your IRR vs hurdle rate, NPV, equity multiple, stressed cash flow, and net exit proceeds — not just the basic yield and cash flow. The verdict is sharper, the risk identification is more specific, and the STRONG BUY / BUY / HOLD / AVOID rating is grounded in the full picture. <strong>The second opinion before you call your bond originator.</strong><br/><br/><em style="color:var(--text4);font-size:12px">Requires a free Anthropic API key. ~$0.01 per analysis. Get yours at console.anthropic.com — new accounts receive free credits.</em></p>
+        <span class="feat-tag">IRR-Aware · Full Metrics Integrated · Streams in Real Time</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who-section">
+  <div class="container reveal">
+    <div class="eyebrow">Who StruclyProp Is For</div>
+    <h2 class="section-h">Three buyers. One tool.<br/><em>Serious analysis.</em></h2>
+    <p class="section-intro">StruclyProp is not for first-time investors who are still learning what yield means. It's for people who already know — and need the next level.</p>
+  </div>
+  <div class="container-wide reveal">
+    <div class="who-grid">
+      <div class="who-card">
+        <span class="who-flag">🏗️</span>
+        <div class="who-title">The Portfolio Investor</div>
+        <p class="who-body">You own 2–8 properties and are actively building. You already know gross yield is a starting point, not an answer. <strong>You want IRR, DSCR, and a sensitivity matrix</strong> before you make an offer — not a spreadsheet you built in 2019 that might have a formula error in column G.</p>
+        <span class="who-tag">Primary Buyer</span>
+      </div>
+      <div class="who-card">
+        <span class="who-flag">🏦</span>
+        <div class="who-title">The Bond Originator or IFA</div>
+        <p class="who-body">You advise clients on property finance or investment. StruclyProp lets you run a full institutional-grade analysis <strong>in a client meeting, in real time.</strong> The sensitivity matrix and CGT structure comparison alone will distinguish you from every other adviser in the room. It's a business expense that makes you look like a million dollars.</p>
+        <span class="who-tag">Professional Licence</span>
+      </div>
+      <div class="who-card">
+        <span class="who-flag">🌍</span>
+        <div class="who-title">The Global SA Investor</div>
+        <p class="who-body">You hold property across markets or are an expat investing back into SA. The ZAR/USD toggle, fully adjustable inputs, and currency-agnostic IRR model mean StruclyProp works whether you're analysing a Cape Town flat from London or comparing a Joburg rental against a Dubai yield. <strong>One tool. Any market.</strong></p>
+        <span class="who-tag">Multi-Market Ready</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="obj-section">
+  <div class="container reveal">
+    <div class="eyebrow">Before You Decide</div>
+    <h2 class="section-h">Three reasons you might hesitate —<br/><em>answered directly.</em></h2>
+  </div>
+  <div class="container reveal">
+    <div class="obj-list">
+      <div class="obj-item">
+        <div class="obj-q">
+          <div class="obj-label q">Objection 01</div>
+          <div class="obj-question">"My accountant or financial adviser does this for me."</div>
+        </div>
+        <div class="obj-answer">
+          <div class="obj-label a">The Rebuttal</div>
+          Your accountant runs these numbers after you've already made the decision — on the annual return, not before you sign. Your financial adviser charges R2,500–R4,000 per hour and sees you quarterly. <strong>StruclyProp runs in 90 seconds, any time, on any deal you're even considering.</strong> It's not a replacement for professional advice — it's the filter you use before you pay for it. You use it to decide which deals are worth the professional's time, and which ones to kill before spending another hour on them.
+        </div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q">
+          <div class="obj-label q">Objection 02</div>
+          <div class="obj-question">"$450 is too expensive for a tool I use occasionally."</div>
+        </div>
+        <div class="obj-answer">
+          <div class="obj-label a">The Rebuttal</div>
+          The Section 13sex deduction on a qualifying 5-unit portfolio saves more than the cost of this tool every single month. The CGT structure optimisation on a single disposal can save 200 times the purchase price. The IRR output on one bad deal you don't make saves you the cost of this tool 100 times over. <strong>If you are seriously evaluating even one property per year, StruclyProp has a positive ROI on the first deal you look at.</strong> The question isn't whether $450 is expensive — it's whether your current analysis is good enough to be making decisions without it.
+        </div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q">
+          <div class="obj-label q">Objection 03</div>
+          <div class="obj-question">"I'm not sure the AI verdict is reliable enough to act on."</div>
+        </div>
+        <div class="obj-answer">
+          <div class="obj-label a">The Rebuttal</div>
+          Correct — don't act on it alone. The AI verdict is not a licensed financial adviser and we don't pretend it is. What it is: <strong>a structured, opinionated synthesis of 30+ data points written in the style of a bank credit analyst</strong>, delivered in four paragraphs that cover yield, cash flow, risk, and a final recommendation. It tells you what the numbers are saying before you decide whether to pay a professional to confirm. Most investors have no structured second opinion at all. The AI is infinitely better than gut feeling — and it costs nothing extra per analysis once you have your API key.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section class="included-section" id="buy">
+  <div class="container reveal">
+    <div class="eyebrow">StruclyProp · Complete Package</div>
+    <h2 class="section-h">Everything in the box.</h2>
+  </div>
+  <div class="container reveal">
+    <div class="included-cols">
+      <ul class="included-list">
+        <li><strong>IRR & NPV Calculator</strong>  — after-tax internal rate of return and net present value at your hurdle rate</li>
+        <li><strong>CGT Ownership Structure Comparison</strong>  — Individual vs Trust vs Company, side by side, best structure auto-highlighted</li>
+        <li><strong>Section 13sex Depreciation</strong>  — annual deduction and tax saving for qualifying portfolios (5+ units)</li>
+        <li><strong>Sensitivity Matrix</strong>  — 9-scenario cash flow grid across vacancy and interest rate movements</li>
+        <li><strong>Interest Rate Stress Test</strong>  — repayment and cash flow at Prime + your chosen basis points</li>
+        <li><strong>Exit & Realisation Model</strong>  — exit price, net proceeds, equity multiple, payback period</li>
+        <li><strong>AI Analyst Verdict</strong> — IRR-aware, full metrics integrated, streams in real time</li>
+        <li><strong>Complete Cash Flow & Yield Model</strong> — 20+ calculations including SARS transfer duty, tax shield, DSCR, break-even vacancy</li>
+        <li><strong>5-Year Capital Growth Table</strong> — equity, ROE, cumulative cash flow, reducing balance amortisation</li>
+        <li><strong>Full Input Validation</strong> — 27 fields with SA-specific rules, ranges, and contextual tooltips</li>
+        <li><strong>ZAR / USD Currency Toggle</strong> — works in any market</li>
+        <li><strong>Disclaimer & Legal Modal</strong> — built-in FAIS Act protection</li>
+        <li><strong>Mobile Responsive</strong> — run it on-site during a viewing</li>
+        <li><strong>Lifetime Access</strong> — one purchase, every deal you ever look at</li>
+      </ul>
+      <div>
+        <div class="gbox">
+          <div class="gbox-hdr">30-Day Money-Back Guarantee</div>
+          <div class="gbox-body">
+            <div class="gbox-title">If it doesn't pay for itself on the first deal, we'll refund you.</div>
+            <p class="gbox-text">If StruclyProp doesn't save you more than $450 — by identifying a better ownership structure, surfacing an IRR that misses your hurdle, or keeping you out of a deal that looked better than it was — <strong>full refund within 30 days, no questions asked.</strong><br/><br/>We're confident making this offer because the numbers are real. One Section 13sex deduction. One avoided bad deal. One CGT saving. Any of these pays for StruclyProp and leaves change.</p>
+          </div>
+        </div>
+        <div class="delivery">INSTANT DELIVERY · NO ACCOUNT REQUIRED · NO INSTALLATION<br/>HTML file delivered immediately after purchase.<br/>Open in Chrome, Safari, or Firefox. Works on Mac, Windows &amp; mobile.<br/>No server. No login. Your data never leaves your browser.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container cta-inner">
+    <div class="cta-eyebrow">One-Time Purchase · Instant Download · Lifetime Access</div>
+    <h2 class="cta-h">Run the analysis that<br/>changes the <em>decision.</em></h2>
+    <p class="cta-sub">Every property deal you've looked at without IRR, Section 13sex, CGT structure comparison, and a sensitivity matrix was analysed with incomplete information. Fix that today.</p>
+    <div class="cta-price-row">
+      <div class="cta-price">$450</div>
+      <div class="cta-price-detail">
+        ONE-TIME PAYMENT<br/>
+        NO SUBSCRIPTION<br/>
+        30-DAY GUARANTEE<br/>
+        INSTANT DELIVERY
+      </div>
+    </div>
+    <a href="https://strucly.lemonsqueezy.com/checkout/buy/63f01aa3-20e7-47de-946b-e2cef0d413ca" class="cta-btn" target="_blank" rel="noopener">
+      Get StruclyProp — $450
+    </a>
+    <div class="cta-fn">Secure checkout · Works globally · Instant delivery · 30-day refund guarantee</div>
+    <div class="cta-api">
+      ⚡ AI Analyst Summary requires a free Anthropic API key (~$0.01 per analysis)<br/>
+      Get yours at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — new accounts receive free credits
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <span class="ft-logo">StruclyProp</span>
+    
+  </div>
+  <div class="ft-copy">© 2025 STRUCLYPROP · ILLUSTRATIVE PURPOSES ONLY · NOT FINANCIAL ADVICE · NOT FSCA REGISTERED</div>
+  <div class="ft-links"><a href="guide.html" target="_blank">User Guide</a><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a></div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} });
+}, { threshold: 0.07, rootMargin: '0px 0px -28px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StruclyProp — How to Use</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0f1e;--bg2:#0c1428;--bg3:#0f1932;--border:#1e2d54;--gold:#f0c040;--gold2:#e0b030;--gold3:#c89020;--goldbg:#0f1e50;--green:#00d68f;--red:#ff4d6d;--amber:#ff9f43;--white:#f0f4ff;--t2:#b8c4e0;--t3:#7a9ac0;--t4:#4a6a9a;--mono:'JetBrains Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,15,30,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;padding:13px 28px;gap:12px;flex-wrap:wrap}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-wordmark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold)}
+.nav-tag{font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.14em;text-transform:uppercase;margin-top:1px}
+.nav-pill{background:var(--goldbg);border:1px solid var(--gold3);color:var(--gold);font-family:var(--mono);font-size:9px;padding:6px 16px;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;transition:all .2s}
+.nav-pill:hover{background:var(--gold);color:var(--bg);text-decoration:none}
+.hero{padding:60px 0 48px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--bg) 60%,rgba(15,30,80,.4))}
+.hero-inner{max-width:960px;margin:0 auto;padding:0 28px}
+.eyebrow{font-family:var(--mono);font-size:9px;color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold2)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,56px);font-weight:900;line-height:1.06;color:var(--white);margin-bottom:12px}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero-sub{font-size:17px;color:var(--t2);max-width:560px;line-height:1.7;font-weight:300}
+.page-wrap{display:flex;max-width:1140px;margin:0 auto;padding:0 28px}
+.sidebar{width:230px;min-width:230px;padding:28px 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);flex-shrink:0}
+.sidebar::-webkit-scrollbar{width:2px}
+.content{flex:1;padding:36px 0 80px 44px;min-width:0}
+.sb-section{margin-bottom:22px}
+.sb-title{font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px;padding-left:2px}
+.sb-link{display:flex;align-items:center;gap:7px;padding:6px 10px;font-size:13px;color:var(--t3);font-weight:300;cursor:pointer;transition:all .15s;border-left:2px solid transparent;border-radius:0 3px 3px 0;text-decoration:none}
+.sb-link:hover{color:var(--white);background:var(--bg3);text-decoration:none}
+.sb-link.active{color:var(--gold);border-left-color:var(--gold);background:var(--goldbg)}
+.sb-num{font-family:var(--mono);font-size:9px;color:var(--t4);flex-shrink:0;width:18px}
+.sb-link.active .sb-num{color:var(--gold3)}
+.doc-section{margin-bottom:60px;scroll-margin-top:76px}
+.section-tag{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:3px;margin-bottom:14px;font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.12em;text-transform:uppercase}
+.section-tag span{color:var(--gold3)}
+.doc-section h2{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,38px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:10px}
+.doc-section h2 em{color:var(--gold);font-style:italic}
+.lead{font-size:16px;color:var(--t2);line-height:1.72;font-weight:300;margin-bottom:24px;max-width:580px}
+.lead strong{color:var(--white);font-weight:500}
+h3.sh{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--white);margin:26px 0 9px}
+p.body{font-size:14px;color:var(--t2);line-height:1.75;font-weight:300;margin-bottom:12px}
+p.body strong{color:var(--white);font-weight:500}
+p.body code{font-family:var(--mono);font-size:11px;background:var(--bg3);color:var(--gold2);padding:1px 6px;border-radius:2px}
+.steps{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.step{display:flex;gap:14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:14px 16px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--goldbg);border:1px solid var(--gold3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+.step-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px}
+.step-desc{font-size:13px;color:var(--t2);line-height:1.6;font-weight:300}
+.step-desc strong{color:var(--white);font-weight:500}
+.step-desc code{font-family:var(--mono);font-size:11px;background:var(--bg);color:var(--gold2);padding:1px 5px;border-radius:2px}
+.callout{border-radius:4px;padding:13px 15px;margin-bottom:16px;border-left:3px solid}
+.callout.tip{background:rgba(0,214,143,.06);border-color:var(--green)}
+.callout.warn{background:rgba(255,159,67,.06);border-color:var(--amber)}
+.callout.danger{background:rgba(255,77,109,.06);border-color:var(--red)}
+.callout.info{background:rgba(74,106,154,.08);border-color:var(--t4)}
+.callout-title{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.callout.tip .callout-title{color:var(--green)}.callout.warn .callout-title{color:var(--amber)}.callout.danger .callout-title{color:var(--red)}.callout.info .callout-title{color:var(--t3)}
+.callout-body{font-size:13px;color:var(--t2);line-height:1.6;font-weight:300}
+.callout-body strong{color:var(--white);font-weight:500}
+.tbl{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px}
+.tbl th{text-align:left;padding:8px 12px;font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg3)}
+.tbl td{padding:9px 12px;border-bottom:1px solid #0e1830;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .fn{font-family:var(--mono);font-size:11px;color:var(--gold2)}
+.tbl .fd{font-family:var(--mono);font-size:11px;color:var(--green)}
+.tbl .fx{font-size:12px;color:var(--t2);font-weight:300;line-height:1.5}
+.tbl .ft{font-size:11px;color:var(--t4);margin-top:3px;font-style:italic}
+.tbl tr:hover td{background:rgba(255,255,255,.008)}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.mc{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:13px 15px}
+.mc.hi{border-color:var(--gold3);background:var(--goldbg)}
+.mc-name{font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.mc-formula{font-family:var(--mono);font-size:11px;color:var(--gold2);margin-bottom:4px}
+.mc-desc{font-size:12px;color:var(--t3);line-height:1.55;font-weight:300}
+.mc-bench{font-family:var(--mono);font-size:9px;color:var(--green);margin-top:5px}
+.mc-warn{font-family:var(--mono);font-size:9px;color:var(--red);margin-top:5px}
+.tab-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.tab-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:13px 15px}
+.tab-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.tab-icon{font-size:14px}.tab-name{font-family:var(--mono);font-size:10px;color:var(--gold);font-weight:700}
+.tab-cnt{font-family:var(--mono);font-size:8px;color:var(--t4);background:var(--bg);border:1px solid var(--border);padding:1px 5px;border-radius:2px}
+.tab-items{list-style:none;display:flex;flex-direction:column;gap:3px}
+.tab-items li{font-size:12px;color:var(--t3);font-weight:300;display:flex;align-items:center;gap:5px}
+.tab-items li::before{content:'›';color:var(--gold3);font-size:11px}
+.verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.vc{border-radius:6px;padding:13px 15px;border:1px solid}
+.vc.sb{background:rgba(0,214,143,.05);border-color:rgba(0,214,143,.3)}.vc.b{background:rgba(0,200,120,.04);border-color:rgba(0,200,120,.2)}.vc.h{background:rgba(240,192,64,.04);border-color:rgba(240,192,64,.2)}.vc.av{background:rgba(255,77,109,.05);border-color:rgba(255,77,109,.3)}
+.vc-lbl{font-family:var(--mono);font-size:11px;font-weight:700;margin-bottom:5px}
+.vc.sb .vc-lbl{color:#00ff99}.vc.b .vc-lbl{color:var(--green)}.vc.h .vc-lbl{color:var(--gold)}.vc.av .vc-lbl{color:var(--red)}
+.vc-desc{font-size:12px;color:var(--t2);line-height:1.5;font-weight:300}
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--white);margin-bottom:7px}
+.faq-a{font-size:13px;color:var(--t2);line-height:1.7;font-weight:300}
+.faq-a strong{color:var(--white);font-weight:500}
+.faq-a code{font-family:var(--mono);font-size:11px;background:var(--bg3);color:var(--gold2);padding:1px 5px;border-radius:2px}
+.rule{height:1px;background:var(--border);margin:36px 0}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);font-weight:700}
+.ft-copy{font-family:var(--mono);font-size:8px;color:var(--t4);letter-spacing:.08em}
+@media(max-width:860px){.page-wrap{flex-direction:column;padding:0 16px}.sidebar{width:100%;min-width:unset;position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);padding:14px 0;display:flex;flex-wrap:wrap;gap:4px}.sb-title{display:none}.sb-section{margin-bottom:0;margin-right:10px}.sb-link{padding:5px 9px;font-size:12px}.content{padding:24px 0 60px}.metric-grid,.tab-grid,.verdict-grid{grid-template-columns:1fr}.hero-inner,.page-wrap{padding:0 16px}.hero{padding:44px 0 36px}nav{padding:12px 16px}footer{padding:14px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="7" fill="#0f1e50" stroke="#1e2d54" stroke-width="1"/><path d="M20 7L34 19H30V33H10V19H6Z" fill="none" stroke="#f0c040" stroke-width="1.5" stroke-linejoin="round"/><rect x="13" y="27" width="3" height="4" rx=".5" fill="#00d68f"/><rect x="18.5" y="23" width="3" height="8" rx=".5" fill="#00d68f"/><rect x="24" y="19" width="3" height="12" rx=".5" fill="#f0c040"/><rect x="17" y="26" width="6" height="7" rx=".5" fill="#0a0f1e"/></svg>
+    <div><div class="nav-wordmark">StruclyProp</div><div class="nav-tag">User Guide · How to Use</div></div>
+  </div>
+  
+</nav>
+
+<div class="hero">
+  <div class="hero-inner reveal">
+    <div class="eyebrow">Complete User Guide</div>
+    <h1>How to use StruclyProp<br/>to analyse <em>any deal.</em></h1>
+    <p class="hero-sub">A full walkthrough of every input, every output, every tab, and every module — from entering your first number to generating an institutional-grade AI analyst verdict.</p>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sb-section"><div class="sb-title">Start Here</div>
+      <a class="sb-link active" href="#start"><span class="sb-num">01</span>Getting Started</a>
+      <a class="sb-link" href="#interface"><span class="sb-num">02</span>Interface Overview</a>
+    </div>
+    <div class="sb-section"><div class="sb-title">Inputs</div>
+      <a class="sb-link" href="#acquisition"><span class="sb-num">03</span>Acquisition</a>
+      <a class="sb-link" href="#financing"><span class="sb-num">04</span>Bond & Financing</a>
+      <a class="sb-link" href="#rental"><span class="sb-num">05</span>Rental Income</a>
+      <a class="sb-link" href="#expenses"><span class="sb-num">06</span>Operating Expenses</a>
+      <a class="sb-link" href="#growth"><span class="sb-num">07</span>Growth & Tax</a>
+      <a class="sb-link" href="#advanced-inp"><span class="sb-num">08</span>Advanced Modelling</a>
+      <a class="sb-link" href="#capital-inp"><span class="sb-num">09</span>Capital Stack</a>
+    </div>
+    <div class="sb-section"><div class="sb-title">Results Tabs</div>
+      <a class="sb-link" href="#tab-ov"><span class="sb-num">10</span>Overview</a>
+      <a class="sb-link" href="#tab-cf"><span class="sb-num">11</span>Cash Flow</a>
+      <a class="sb-link" href="#tab-adv"><span class="sb-num">12</span>Advanced</a>
+      <a class="sb-link" href="#tab-inst"><span class="sb-num">13</span>Institutional</a>
+      <a class="sb-link" href="#tab-ai"><span class="sb-num">14</span>AI Verdict</a>
+    </div>
+    <div class="sb-section"><div class="sb-title">Reference</div>
+      <a class="sb-link" href="#metrics"><span class="sb-num">15</span>Key Metrics</a>
+      <a class="sb-link" href="#benchmarks"><span class="sb-num">16</span>SA Benchmarks</a>
+      <a class="sb-link" href="#save-load"><span class="sb-num">17</span>Save & Load</a>
+      <a class="sb-link" href="#faq"><span class="sb-num">18</span>FAQ</a>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- 01 -->
+    <section class="doc-section reveal" id="start">
+      <div class="section-tag"><span>01</span>Getting Started</div>
+      <h2>Open StruclyProp and<br/><em>accept the disclaimer.</em></h2>
+      <p class="lead">StruclyProp runs entirely in your browser. No installation, no account, no download needed. Open the link, accept the legal terms, and start analysing immediately.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><div class="step-title">Open the link</div><div class="step-desc">Go to <a href="https://callumskunk.github.io/StruclyProp/" target="_blank">callumskunk.github.io/StruclyProp</a> in Chrome, Safari, Firefox, or Edge. Works on desktop, tablet, and mobile.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div><div class="step-title">Read and accept the disclaimer</div><div class="step-desc">A legal disclaimer modal appears on first load. Read it carefully — StruclyProp is <strong>not financial advice</strong> and is not FSCA registered. Tick the checkbox and click <strong>I UNDERSTAND — OPEN STRUCLYPROP</strong>.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div><div class="step-title">Enter your Anthropic API key (for AI Verdict only)</div><div class="step-desc">The gold banner asks for an API key. This is <strong>only needed for the AI Analyst Summary</strong>. All financial calculations work without it. Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — paste it in and click <code>SAVE KEY</code>. The key is stored only in your browser.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div><div class="step-title">Start entering your deal</div><div class="step-desc">All inputs start at zero. Every field you change updates the results in real time — <strong>there is no submit button</strong>. Start with Purchase Price and Gross Monthly Rent and everything else flows from there.</div></div></div>
+      </div>
+      <div class="callout tip"><div class="callout-title">💡 Tip</div><div class="callout-body">Save your deal before closing the browser — click the <strong>💾 Save</strong> button at the top of the input panel, give it a name, and it will be available in the Load dropdown next time you open StruclyProp.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 02 -->
+    <section class="doc-section reveal" id="interface">
+      <div class="section-tag"><span>02</span>Interface Overview</div>
+      <h2>Two panels.<br/><em>Everything live.</em></h2>
+      <p class="lead">StruclyProp splits into a left <strong>input panel</strong> and a right <strong>results panel</strong>. Every number recalculates the instant you type.</p>
+      <h3 class="sh">Left Panel — Inputs</h3>
+      <p class="body">All assumptions are entered here, organised into sections: Acquisition, Bond & Financing, Rental Income, Operating Expenses, Growth & Tax, Advanced Modelling, and Capital Stack. Scroll down the left panel to see all inputs. The <strong>Save/Load bar</strong> at the top lets you name and save your deal.</p>
+      <h3 class="sh">Right Panel — 5 Results Tabs</h3>
+      <div class="tab-grid">
+        <div class="tab-card"><div class="tab-hdr"><span class="tab-icon">📊</span><span class="tab-name">Overview</span><span class="tab-cnt">5 sections</span></div><ul class="tab-items"><li>Acquisition summary</li><li>Bond repayment</li><li>Yield analysis</li><li>Market benchmarks</li><li>5-Year capital growth table</li></ul></div>
+        <div class="tab-card"><div class="tab-hdr"><span class="tab-icon">💰</span><span class="tab-name">Cash Flow</span><span class="tab-cnt">4 sections</span></div><ul class="tab-items"><li>Monthly cash flow waterfall</li><li>Break-even analysis</li><li>Interest rate stress test</li><li>Sensitivity matrix</li></ul></div>
+        <div class="tab-card"><div class="tab-hdr"><span class="tab-icon">📈</span><span class="tab-name">Advanced</span><span class="tab-cnt">4 sections</span></div><ul class="tab-items"><li>IRR / NPV / equity multiple</li><li>Exit & realisation</li><li>CGT by ownership structure</li><li>Section 13sex depreciation</li></ul></div>
+        <div class="tab-card"><div class="tab-hdr"><span class="tab-icon">🏛</span><span class="tab-name">Institutional</span><span class="tab-cnt">4 sections</span></div><ul class="tab-items"><li>Professional vitals dashboard</li><li>10-year DCF model</li><li>Cash-on-cash sensitivity matrix</li><li>Capital stack & profit waterfall</li></ul></div>
+      </div>
+      <div class="callout info"><div class="callout-title">ℹ Mobile</div><div class="callout-body">On phones, StruclyProp switches to a tabbed layout. Tap <strong>📝 Inputs</strong> to enter numbers, <strong>📊 Results</strong> to see the dashboard. The <strong>VIEW RESULTS →</strong> button at the bottom navigates across.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 03 -->
+    <section class="doc-section reveal" id="acquisition">
+      <div class="section-tag"><span>03</span>Acquisition Inputs</div>
+      <h2>Acquisition &amp;<br/><em>purchase costs.</em></h2>
+      <p class="lead">Start here. Transfer duty is auto-calculated from the SARS 2024/25 scale the moment you enter the purchase price.</p>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Purchase Price</td><td class="fd">R 0</td><td><span class="fx">The agreed purchase price. Transfer duty calculates automatically.<div class="ft">Zero on new builds from a VAT-registered developer.</div></span></td></tr>
+        <tr><td class="fn">Deposit %</td><td class="fd">0%</td><td><span class="fx">Your cash deposit as % of purchase price. SA banks require minimum 10% for investment properties.<div class="ft">Higher deposit = better LTV = often better interest rate.</div></span></td></tr>
+        <tr><td class="fn">Transfer Attorney Fees</td><td class="fd">R 0</td><td><span class="fx">Conveyancing fees — typically R15k–R40k depending on purchase price.</span></td></tr>
+        <tr><td class="fn">Bond Registration Fees</td><td class="fd">R 0</td><td><span class="fx">Bond attorney fees — separate from transfer fees. Typically R10k–R25k.</span></td></tr>
+        <tr><td class="fn">Other Acquisition Costs</td><td class="fd">R 0</td><td><span class="fx">Electrical COC, plumbing certificate, inspection, pest control, and sundries.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 04 -->
+    <section class="doc-section reveal" id="financing">
+      <div class="section-tag"><span>04</span>Bond & Financing</div>
+      <h2>Bond terms &amp;<br/><em>interest rate.</em></h2>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Annual Interest Rate</td><td class="fd">0%</td><td><span class="fx">SA Prime Rate + your bank's spread. Prime is 11.25% (May 2025). Most investors are quoted Prime + 1–2%. Enter the full nominal annual rate.<div class="ft">Get a pre-qualification from a bond originator for your exact rate.</div></span></td></tr>
+        <tr><td class="fn">Loan Term</td><td class="fd">0 years</td><td><span class="fx">Repayment period. SA standard is 20 years. A shorter term reduces total interest but raises monthly repayments.</span></td></tr>
+      </tbody></table>
+      <div class="callout warn"><div class="callout-title">⚠ Rate Sensitivity</div><div class="callout-body">A 1% change in interest rate on a R1.35M bond changes monthly repayments by roughly <strong>R700–R800/month</strong>. Always run the Stress Test in the Cash Flow tab.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 05 -->
+    <section class="doc-section reveal" id="rental">
+      <div class="section-tag"><span>05</span>Rental Income</div>
+      <h2>Rental income<br/><em>assumptions.</em></h2>
+      <p class="lead">Be conservative. Using optimistic rent and vacancy assumptions is the single most common mistake first-time landlords make.</p>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Gross Monthly Rent</td><td class="fd">R 0</td><td><span class="fx">Achievable market rent at 100% occupancy. Check PayProp, Property24, or TPN for comparables.<div class="ft">Use the middle of the range — not the top. Top rent requires perfect property and perfect tenant.</div></span></td></tr>
+        <tr><td class="fn">Vacancy Rate</td><td class="fd">0%</td><td><span class="fx">Expected proportion of time the unit is vacant. SA residential norm is 5–10%.<div class="ft">StruclyProp uses this to calculate Effective Gross Income = Gross Rent × (1 − Vacancy).</div></span></td></tr>
+        <tr><td class="fn">Annual Rental Escalation</td><td class="fd">0%</td><td><span class="fx">Expected annual rent increase. Typically CPI-linked at 6–8%. This drives the 5-year and 10-year projections.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 06 -->
+    <section class="doc-section reveal" id="expenses">
+      <div class="section-tag"><span>06</span>Operating Expenses</div>
+      <h2>Every cost that<br/><em>leaves your pocket.</em></h2>
+      <p class="lead">This is what separates gross yield from net yield. Most online calculators ignore half of these. StruclyProp includes all of them.</p>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Rates & Taxes</td><td class="fd">R 0/mo</td><td><span class="fx">Monthly municipal rates. Verify with the municipality — varies by area and GV valuation.</span></td></tr>
+        <tr><td class="fn">Levies</td><td class="fd">R 0/mo</td><td><span class="fx">Body corporate / HOA levy for sectional title or estate. Zero for freehold standalone properties.</span></td></tr>
+        <tr><td class="fn">Building Insurance</td><td class="fd">R 0/mo</td><td><span class="fx">Building insurance is the landlord's responsibility. Contents is the tenant's. Budget R400–R1,200/month.</span></td></tr>
+        <tr><td class="fn">Management Fee %</td><td class="fd">0%</td><td><span class="fx">Percentage of effective rent paid to the managing agent. SA market rate is 8–12% + VAT.</span></td></tr>
+        <tr><td class="fn">Maintenance Reserve %</td><td class="fd">0% p.a.</td><td><span class="fx">Annual maintenance as % of property value. Rule of thumb: 1% newer, 1.5–2% older stock.</span></td></tr>
+        <tr><td class="fn">Utilities</td><td class="fd">R 0/mo</td><td><span class="fx">Only if you pay electricity/water directly. Zero if tenants have separate accounts.</span></td></tr>
+        <tr><td class="fn">Accounting & Legal</td><td class="fd">R 0/yr</td><td><span class="fx">Annual tax return, bookkeeping, and legal costs. Budget R2,500–R6,000 p.a.</span></td></tr>
+        <tr><td class="fn">Special Levies</td><td class="fd">R 0/yr</td><td><span class="fx">Body corporate special levies for capital projects. Enter expected annual average.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 07 -->
+    <section class="doc-section reveal" id="growth">
+      <div class="section-tag"><span>07</span>Growth & Tax</div>
+      <h2>Capital growth<br/>&amp; <em>your tax rate.</em></h2>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Annual Capital Growth</td><td class="fd">0%</td><td><span class="fx">Expected annual property appreciation. SA long-run nominal average is 6–8%. Use FNB HPI or Lightstone data for suburb-specific estimates.<div class="ft">Be conservative. Real (inflation-adjusted) growth has been closer to 0–2% recently.</div></span></td></tr>
+        <tr><td class="fn">Marginal Income Tax Rate</td><td class="fd">0%</td><td><span class="fx">Your SARS marginal rate. Rental income adds to your total taxable income. Valid brackets: 18, 26, 31, 36, 39, 41, 45%.<div class="ft">Bond interest and all operating expenses are deductible — StruclyProp calculates your monthly tax shield.</div></span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 08 -->
+    <section class="doc-section reveal" id="advanced-inp">
+      <div class="section-tag"><span>08</span>Advanced Modelling</div>
+      <h2>IRR, exit &amp;<br/><em>stress testing.</em></h2>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">Hold Period</td><td class="fd">0 yrs</td><td><span class="fx">How long you plan to hold before selling. Drives IRR, NPV, and exit valuation. Typically 5–10 years.</span></td></tr>
+        <tr><td class="fn">Hurdle Rate</td><td class="fd">0%</td><td><span class="fx">Your minimum acceptable annualised return. SA investors typically use 12–15%. If IRR > hurdle, the deal clears your bar.</span></td></tr>
+        <tr><td class="fn">Exit Cap Rate</td><td class="fd">0%</td><td><span class="fx">The yield the market will apply to your NOI at exit to price the property. Be conservative — use 7–9% for residential.</span></td></tr>
+        <tr><td class="fn">Exit Agent Commission</td><td class="fd">0%</td><td><span class="fx">Selling agent fee. SA norm is 5–7.5% + VAT.</span></td></tr>
+        <tr><td class="fn">CGT Inclusion Rate</td><td class="fd">0%</td><td><span class="fx">Individual = 40% · Trust = 80% · Company = 80% (at lower corporate rate). The Advanced tab compares all three.</span></td></tr>
+        <tr><td class="fn">Number of Units</td><td class="fd">0</td><td><span class="fx">5+ units qualifies for Section 13sex — 5% p.a. depreciation on building cost. Powerful portfolio tax break.</span></td></tr>
+        <tr><td class="fn">Stress Test (bps)</td><td class="fd">0</td><td><span class="fx">Rate hike scenario. 200bps = Prime +2%. Shows how resilient cash flow is to SARB rate increases.</span></td></tr>
+        <tr><td class="fn">Expense Inflation</td><td class="fd">0%</td><td><span class="fx">Annual escalation of operating expenses in the 10-year DCF model. Typically 5–7%.</span></td></tr>
+        <tr><td class="fn">DCF Exit Year</td><td class="fd">0</td><td><span class="fx">Year of assumed sale in the DCF model. Exit value = final year NOI ÷ exit cap rate.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 09 -->
+    <section class="doc-section reveal" id="capital-inp">
+      <div class="section-tag"><span>09</span>Capital Stack</div>
+      <h2>Deal structuring &amp;<br/><em>waterfall logic.</em></h2>
+      <table class="tbl"><thead><tr><th>Field</th><th>Default</th><th>What to enter</th></tr></thead><tbody>
+        <tr><td class="fn">GP Equity Split</td><td class="fd">0%</td><td><span class="fx">General Partner equity as % of total equity. LP contributes the remainder. GP typically 10–30%.</span></td></tr>
+        <tr><td class="fn">LP Preferred Return</td><td class="fd">0%</td><td><span class="fx">LPs receive this annual return before the GP earns any promote. Industry standard 6–8% p.a., compounded.</span></td></tr>
+        <tr><td class="fn">GP Promote</td><td class="fd">0%</td><td><span class="fx">GP's share of profits above the preferred return hurdle. 20% promote = GP earns 20c per rand above hurdle.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 10 -->
+    <section class="doc-section reveal" id="tab-ov">
+      <div class="section-tag"><span>10</span>Overview Tab</div>
+      <h2>📊 Overview —<br/><em>the deal at a glance.</em></h2>
+      <p class="lead">Default view when results open. Covers acquisition summary, bond repayment, yield analysis, benchmarks, and 5-year projection.</p>
+      <h3 class="sh">Key metrics in this tab</h3>
+      <div class="metric-grid">
+        <div class="mc"><div class="mc-name">Gross Yield</div><div class="mc-formula">Gross Annual Rent ÷ Purchase Price</div><div class="mc-desc">Pre-expense yield. First filter — below 7% in SA, scrutinise carefully.</div><div class="mc-bench">SA target: ≥7%</div></div>
+        <div class="mc hi"><div class="mc-name">Net Yield</div><div class="mc-formula">NOI ÷ Purchase Price</div><div class="mc-desc">The definitive yield. If net yield > interest rate, leverage creates positive carry.</div><div class="mc-bench">SA target: 4–6%</div></div>
+        <div class="mc"><div class="mc-name">Total Equity Deployed</div><div class="mc-formula">Deposit + All Acquisition Costs</div><div class="mc-desc">Real day-1 cash outlay — the denominator for ROE. Not just the deposit.</div></div>
+        <div class="mc"><div class="mc-name">5-Year Growth Table</div><div class="mc-formula">Year-by-year amortisation</div><div class="mc-desc">Property value, bond balance, equity, cumulative CF, and ROE for each year.</div></div>
+      </div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 11 -->
+    <section class="doc-section reveal" id="tab-cf">
+      <div class="section-tag"><span>11</span>Cash Flow Tab</div>
+      <h2>💰 Cash Flow —<br/><em>what actually hits your account.</em></h2>
+      <div class="metric-grid">
+        <div class="mc hi"><div class="mc-name">Pre-Tax Monthly CF</div><div class="mc-formula">Eff. Rent − Expenses − Bond</div><div class="mc-desc">Negative = monthly top-up from salary. Positive = property pays you.</div></div>
+        <div class="mc"><div class="mc-name">After-Tax Monthly CF</div><div class="mc-formula">Pre-Tax CF + Tax Shield</div><div class="mc-desc">True economic position. Bond interest and expenses are SARS deductible.</div></div>
+        <div class="mc"><div class="mc-name">DSCR</div><div class="mc-formula">NOI ÷ Annual Debt Service</div><div class="mc-desc">SA banks require ≥1.2×. Below 1.0× = bond will likely be declined.</div><div class="mc-bench">Target: ≥1.2×</div><div class="mc-warn">Danger: below 1.0×</div></div>
+        <div class="mc"><div class="mc-name">Break-Even Vacancy</div><div class="mc-formula">1 − (Expenses + Bond) ÷ Gross Rent</div><div class="mc-desc">Maximum vacancy before cash flow turns negative. Higher = more resilient.</div><div class="mc-bench">Target: >15%</div></div>
+      </div>
+      <h3 class="sh">Sensitivity Matrix</h3>
+      <p class="body">A 3×3 colour-coded grid: monthly cash flow across combinations of ±2% rate change and ±3% vacancy change. Shows exactly where the deal turns red.</p>
+      <h3 class="sh">Stress Test</h3>
+      <p class="body">Recalculates repayment and cash flow at your current rate plus your chosen basis points. If stressed CF is still manageable, the deal survives a rate cycle.</p>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 12 -->
+    <section class="doc-section reveal" id="tab-adv">
+      <div class="section-tag"><span>12</span>Advanced Tab</div>
+      <h2>📈 Advanced —<br/><em>IRR, exit &amp; tax structure.</em></h2>
+      <div class="metric-grid">
+        <div class="mc hi"><div class="mc-name">IRR (After-Tax)</div><div class="mc-formula">Newton-Raphson on annual CFs + exit</div><div class="mc-desc">Annualised return on equity over your hold period. If IRR > hurdle rate, the deal creates value.</div></div>
+        <div class="mc"><div class="mc-name">NPV at Hurdle Rate</div><div class="mc-formula">Σ (CF_t ÷ (1+hurdle)^t)</div><div class="mc-desc">Positive = deal adds value above minimum return. Negative = doesn't clear your bar.</div></div>
+        <div class="mc"><div class="mc-name">Equity Multiple (MoIC)</div><div class="mc-formula">Total Returns ÷ Equity Deployed</div><div class="mc-desc">How many times you multiply your money. 2× = doubled. SA target: 1.8–2.5× over 10 years.</div></div>
+        <div class="mc"><div class="mc-name">CGT by Structure</div><div class="mc-formula">Individual 40% / Trust 80% / Company 80%</div><div class="mc-desc">Side-by-side CGT comparison. Best structure highlighted. Decide before you sign.</div></div>
+      </div>
+      <div class="callout danger"><div class="callout-title">🚨 Critical</div><div class="callout-body">Ownership structure decisions are <strong>irreversible</strong> once the property transfers. Use the CGT comparison before signing the offer to purchase — not after. Consult a tax practitioner.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 13 -->
+    <section class="doc-section reveal" id="tab-inst">
+      <div class="section-tag"><span>13</span>Institutional Tab</div>
+      <h2>🏛 Institutional —<br/><em>underwriting-grade analysis.</em></h2>
+      <p class="lead">The modules a bank credit committee, fund manager, or professional underwriter would run. Four sections:</p>
+      <h3 class="sh">1 — DSCR Lender Alert</h3>
+      <p class="body">Auto-appears at the top. Red if DSCR &lt; 1.0 (bank won't finance), amber if 1.0–1.2 (marginal), green if ≥1.2 (bankable). Red alert also shows exactly how much to increase the deposit to fix it.</p>
+      <h3 class="sh">2 — Professional Vitals Dashboard</h3>
+      <div class="metric-grid">
+        <div class="mc"><div class="mc-name">DSCR</div><div class="mc-bench">≥1.35× Approved · &lt;1.0× Unbankable</div></div>
+        <div class="mc"><div class="mc-name">LTV</div><div class="mc-bench">≤80% Strong · &gt;90% High Risk</div></div>
+        <div class="mc"><div class="mc-name">OpEx Ratio</div><div class="mc-bench">&lt;35% Efficient · &gt;50% High OpEx</div></div>
+        <div class="mc"><div class="mc-name">Break-Even Occupancy</div><div class="mc-bench">&lt;75% Resilient · &gt;90% Fragile</div></div>
+      </div>
+      <h3 class="sh">3 — 10-Year DCF Model</h3>
+      <p class="body">Year-by-year table: Gross Rent, Effective Rent, OpEx (with your expense inflation rate), NOI, Debt Service, Pre-Tax CF, Tax Shield, After-Tax CF, and per-year DSCR. Exit year highlighted in gold. Summary cards show Leveraged IRR, NPV, and MoIC.</p>
+      <h3 class="sh">4 — Cash-on-Cash Sensitivity Matrix</h3>
+      <p class="body">A 7×7 grid crossing interest rate deltas (−3% to +3%) against vacancy rates (2% to 15%). Each cell shows Cash-on-Cash Return, colour-coded from deep green (&gt;10%) to deep red (&lt;−10%). Shows exactly where the deal breaks.</p>
+      <h3 class="sh">5 — Capital Stack & Waterfall</h3>
+      <p class="body">Horizontal stacked bar showing Senior Debt / LP Equity / GP Equity proportions. Profit waterfall distributes total DCF returns: LP preferred return first, then excess split with GP promote, showing final MoIC for each party.</p>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 14 -->
+    <section class="doc-section reveal" id="tab-ai">
+      <div class="section-tag"><span>14</span>AI Verdict Tab</div>
+      <h2>⚡ AI Verdict —<br/><em>your second opinion.</em></h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><div class="step-title">Ensure your API key is saved</div><div class="step-desc">The gold banner at the top must show <strong>✓ Key active</strong>. If not, paste your key and click <code>SAVE KEY</code>. One-time setup.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div><div class="step-title">Click ⚡ GENERATE ANALYSIS</div><div class="step-desc">Scroll below the tab panel to the AI Summary section and click the button. The AI streams a four-paragraph deal memo in real time.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div><div class="step-title">Read the verdict</div><div class="step-desc">Four sections: Yield & Income · Cash Flow · Risk & Resilience · Verdict. The final paragraph gives <strong>STRONG BUY / BUY / HOLD / AVOID</strong> with the biggest risk, biggest upside, and one action before you proceed.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div><div class="step-title">Re-analyse after changing inputs</div><div class="step-desc">Click <code>↺ RE-ANALYSE</code> any time after updating inputs to get a fresh verdict on the updated numbers.</div></div></div>
+      </div>
+      <h3 class="sh">What the ratings mean</h3>
+      <div class="verdict-grid">
+        <div class="vc sb"><div class="vc-lbl">STRONG BUY</div><div class="vc-desc">IRR clears hurdle, positive cash flow, strong DSCR, robust break-even. Numbers stack up across all dimensions.</div></div>
+        <div class="vc b"><div class="vc-lbl">BUY</div><div class="vc-desc">Solid with manageable risks. IRR clears hurdle but may have a monthly top-up or slightly tight break-even.</div></div>
+        <div class="vc h"><div class="vc-lbl">HOLD</div><div class="vc-desc">Capital growth may work but yield is weak, DSCR marginal, or risk matrix shows significant downside. Renegotiate.</div></div>
+        <div class="vc av"><div class="vc-lbl">AVOID</div><div class="vc-desc">IRR below hurdle, DSCR below 1.0, or deal fails under mild stress. Walk away or restructure fundamentally.</div></div>
+      </div>
+      <div class="callout warn"><div class="callout-title">⚠ Important</div><div class="callout-body">The AI verdict is <strong>not licensed financial advice</strong>. It is an automated synthesis of your inputs against market benchmarks. Always verify with a registered financial adviser, bond originator, and tax practitioner before investing.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 15 -->
+    <section class="doc-section reveal" id="metrics">
+      <div class="section-tag"><span>15</span>Key Metrics Explained</div>
+      <h2>Every metric.<br/><em>Plain English.</em></h2>
+      <table class="tbl"><thead><tr><th>Metric</th><th>Formula</th><th>What it means</th></tr></thead><tbody>
+        <tr><td class="fn">EGI</td><td class="fd">Gross Rent × (1−Vac)</td><td><span class="fx">Effective Gross Income — actual rent collected after vacancy allowance.</span></td></tr>
+        <tr><td class="fn">NOI</td><td class="fd">EGI − OpEx</td><td><span class="fx">Net Operating Income — property income before debt service. The asset's output independent of financing.</span></td></tr>
+        <tr><td class="fn">Pre-Tax CF</td><td class="fd">NOI − Debt Service</td><td><span class="fx">Monthly cash in your pocket before tax effects. Negative = you top up monthly.</span></td></tr>
+        <tr><td class="fn">Tax Shield</td><td class="fd">(OpEx + Interest) × Tax Rate</td><td><span class="fx">SARS allows bond interest and all opex as deductions against rental income. Reduces your effective tax each month.</span></td></tr>
+        <tr><td class="fn">After-Tax CF</td><td class="fd">Pre-Tax CF + Shield</td><td><span class="fx">True economic position as a taxpaying landlord.</span></td></tr>
+        <tr><td class="fn">IRR</td><td class="fd">NPV = 0 (solve for rate)</td><td><span class="fx">Annualised after-tax return on equity including all cash flows and exit. Compare against hurdle rate.</span></td></tr>
+        <tr><td class="fn">NPV</td><td class="fd">Σ CF_t ÷ (1+hurdle)^t</td><td><span class="fx">Value created above your hurdle rate in today's rands. Positive = deal adds value.</span></td></tr>
+        <tr><td class="fn">MoIC</td><td class="fd">Total Returns ÷ Equity In</td><td><span class="fx">Money-on-investment-capital. 2× = doubled your money.</span></td></tr>
+        <tr><td class="fn">DSCR</td><td class="fd">NOI ÷ Annual Debt Service</td><td><span class="fx">Primary lender metric. ≥1.2× required by SA banks. Below 1.0× = bond declined.</span></td></tr>
+        <tr><td class="fn">Cash-on-Cash</td><td class="fd">Annual CF ÷ Equity Deployed</td><td><span class="fx">Annual cash return as % of cash invested. Does not include appreciation.</span></td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 16 -->
+    <section class="doc-section reveal" id="benchmarks">
+      <div class="section-tag"><span>16</span>SA Benchmarks</div>
+      <h2>South African<br/><em>market benchmarks.</em></h2>
+      <table class="tbl"><thead><tr><th>Metric</th><th style="color:var(--green)">Good</th><th style="color:var(--amber)">Marginal</th><th style="color:var(--red)">Warning</th></tr></thead><tbody>
+        <tr><td class="fn">Gross Yield</td><td class="fd">≥ 8%</td><td class="fd" style="color:var(--amber)">6–8%</td><td class="fd" style="color:var(--red)">< 6%</td></tr>
+        <tr><td class="fn">Net Yield</td><td class="fd">≥ 6%</td><td class="fd" style="color:var(--amber)">4–6%</td><td class="fd" style="color:var(--red)">< 4%</td></tr>
+        <tr><td class="fn">DSCR</td><td class="fd">≥ 1.35×</td><td class="fd" style="color:var(--amber)">1.0–1.35×</td><td class="fd" style="color:var(--red)">< 1.0×</td></tr>
+        <tr><td class="fn">LTV</td><td class="fd">≤ 75%</td><td class="fd" style="color:var(--amber)">75–85%</td><td class="fd" style="color:var(--red)">> 90%</td></tr>
+        <tr><td class="fn">Break-Even Vacancy</td><td class="fd">≥ 20%</td><td class="fd" style="color:var(--amber)">12–20%</td><td class="fd" style="color:var(--red)">< 10%</td></tr>
+        <tr><td class="fn">OpEx Ratio</td><td class="fd">< 35%</td><td class="fd" style="color:var(--amber)">35–50%</td><td class="fd" style="color:var(--red)">> 50%</td></tr>
+        <tr><td class="fn">Break-Even Occupancy</td><td class="fd">< 75%</td><td class="fd" style="color:var(--amber)">75–90%</td><td class="fd" style="color:var(--red)">> 90%</td></tr>
+        <tr><td class="fn">SA Prime Rate</td><td class="fd" colspan="3" style="color:var(--t2)">11.25% (May 2025) — verify before use</td></tr>
+        <tr><td class="fn">Rental Escalation</td><td class="fd" colspan="3" style="color:var(--t2)">6–8% p.a. CPI-linked; many leases cap at 8–10%</td></tr>
+        <tr><td class="fn">Capital Growth</td><td class="fd" colspan="3" style="color:var(--t2)">6–8% nominal long-run; 0–2% real (inflation-adjusted)</td></tr>
+        <tr><td class="fn">Transfer Duty</td><td class="fd" colspan="3" style="color:var(--t2)">0% ≤R1.1M · 3% up to R1.512M · 6% to R2.117M · 8% to R2.723M · 11% above</td></tr>
+      </tbody></table>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 17 -->
+    <section class="doc-section reveal" id="save-load">
+      <div class="section-tag"><span>17</span>Save & Load Projects</div>
+      <h2>Save your deals.<br/><em>Come back anytime.</em></h2>
+      <p class="lead">StruclyProp saves deals to your browser's local storage — completely private, never sent anywhere. Unlimited saves with different names.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><div class="step-title">Name your deal</div><div class="step-desc">Type a deal name in the <strong>Project</strong> field at the top of the input panel — e.g. <code>Sandton flat Jan 2025</code></div></div></div>
+        <div class="step"><div class="step-num">2</div><div><div class="step-title">Click 💾 Save</div><div class="step-desc">All 30+ inputs are saved instantly with the current date. A confirmation toast appears at the bottom of the screen.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div><div class="step-title">Load a saved deal</div><div class="step-desc">Click the <strong>Load dropdown</strong>, select the deal name, and all inputs restore instantly with a full recalculation.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div><div class="step-title">Clear for a fresh deal</div><div class="step-desc">Click <strong>✕ Clear</strong> to reset all inputs to zero. You'll be asked to confirm before clearing.</div></div></div>
+      </div>
+      <div class="callout warn"><div class="callout-title">⚠ Note</div><div class="callout-body">Saved deals are stored in your browser's <code>localStorage</code>. They are <strong>device and browser specific</strong> — clearing your browser data or switching browsers will lose them. For important deals, save a screenshot or copy the key numbers.</div></div>
+    </section>
+    <div class="rule"></div>
+
+    <!-- 18 -->
+    <section class="doc-section reveal" id="faq">
+      <div class="section-tag"><span>18</span>FAQ</div>
+      <h2>Common questions<br/><em>answered directly.</em></h2>
+      <div class="faq-item"><div class="faq-q">Why doesn't StruclyProp have a submit button?</div><div class="faq-a">Every calculation updates live the moment you type. There is nothing to submit — the results panel always reflects your current inputs instantly.</div></div>
+      <div class="faq-item"><div class="faq-q">Where is my data stored?</div><div class="faq-a">Nowhere external. StruclyProp runs entirely in your browser. No data is sent to StruclyProp's servers. If you use the AI Summary, your inputs are sent directly to Anthropic's API under their privacy policy. Your API key is stored only in your browser's sessionStorage and never transmitted to StruclyProp.</div></div>
+      <div class="faq-item"><div class="faq-q">Why is my DSCR flagged as a problem?</div><div class="faq-a">A DSCR below 1.2× means your NOI is insufficient to meet SA bank financing thresholds. Below 1.0× means rental income alone cannot service the bond at all. Fix by increasing the deposit, reducing the purchase price, or increasing the rent.</div></div>
+      <div class="faq-item"><div class="faq-q">Why is IRR showing as — ?</div><div class="faq-a">IRR cannot be calculated when cumulative cash flows are negative at all points — the deal never generates a positive return. This happens when exit proceeds are smaller than total equity deployed plus cumulative losses. Try a longer hold period or lower exit cap rate.</div></div>
+      <div class="faq-item"><div class="faq-q">How accurate is the transfer duty calculation?</div><div class="faq-a">StruclyProp uses the SARS 2024/25 sliding scale: 0% up to R1.1M · 3% on R1.1M–R1.512M · 6% on R1.512M–R2.117M · 8% on R2.117M–R2.723M · 11% above R2.723M. Transfer duty is zero on new builds from a VAT-registered developer. Confirm with your conveyancing attorney before transfer.</div></div>
+      <div class="faq-item"><div class="faq-q">Can I use StruclyProp for international properties?</div><div class="faq-a">Yes. All inputs are fully adjustable — interest rate, tax rate, acquisition costs, and local fees. The ZAR/USD toggle converts display values. The SARS-specific features (transfer duty, Section 13sex, SARS brackets) apply to SA only. For other markets, enter your local equivalents.</div></div>
+      <div class="faq-item"><div class="faq-q">Is the AI verdict reliable enough to act on?</div><div class="faq-a">Use it as a <strong>structured second opinion</strong>, not a final decision. The AI verdict is instructed to write like a bank credit analyst using your actual numbers against SA market benchmarks. It surfaces risks you might not have quantified. It is not a substitute for advice from a registered financial adviser, bond originator, or tax practitioner.</div></div>
+      <div class="faq-item"><div class="faq-q">What does the API key cost?</div><div class="faq-a">Each AI analysis costs approximately <strong>$0.01 (about R0.18)</strong> in Anthropic API credits. New accounts receive free credits that cover hundreds of analyses. After that, you load credit in your Anthropic account — there is no subscription, only pay-per-use.</div></div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="ft-logo">StruclyProp</div>
+  <div class="ft-copy">© 2025 STRUCLYPROP · FOR ILLUSTRATIVE PURPOSES ONLY · NOT FINANCIAL ADVICE · NOT FSCA REGISTERED</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target);}}),{threshold:.06,rootMargin:'0px 0px -24px 0px'});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+const sections = document.querySelectorAll('.doc-section');
+const links = document.querySelectorAll('.sb-link');
+const spy = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting){ links.forEach(l=>l.classList.remove('active')); const m=document.querySelector(`.sb-link[href="#${x.target.id}"]`); if(m)m.classList.add('active'); }}),{rootMargin:'-15% 0px -70% 0px'});
+sections.forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
